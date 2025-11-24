@@ -8,26 +8,27 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const fetchLaunchData = async (targetModel: string): Promise<DashboardData> => {
   try {
-    const model = 'gemini-2.5-flash';
+    const model = 'gemini-3-pro-preview';
     
     const prompt = `
-      Act as a senior tech analyst monitoring a major AI product launch. 
+      Act as a senior tech analyst monitoring a major AI product launch for "${targetModel}".
       
       TASK:
       1. Search specifically for the latest news, tweets, and headlines regarding "${targetModel}" from the last 24 hours.
       2. Analyze the sentiment to calculate a "Hype Level" from 0 to 100 based strictly on the search results for "${targetModel}".
       3. Identify the top 3 recurring themes or headlines for "${targetModel}".
       4. Extract 4 distinct "Developer Reactions" or quotes found in the search results regarding "${targetModel}" (e.g., from Reddit, X/Twitter, Hacker News, or blogs). Paraphrase if necessary to fit a short "tweet" style format.
-      5. Extract or estimate 4 key technical specs for "${targetModel}" based on available info or rumors:
-         - "arenaScore": A projected or actual ELO/Benchmark score (e.g., "1250", "Top Tier").
-         - "reasoning": A brief metric on reasoning capability (e.g., "92% MMLU", "High").
-         - "contextWindow": The context window size (e.g., "128k", "1M", "Unknown").
-         - "speed": Inference speed or latency description (e.g., "100 tok/s", "Real-time").
+      5. GENERATE TECHNICAL TELEMETRY (Stats):
+         - Extract actual specs if found, otherwise ESTIMATE realistic specifications for a model of this tier.
+         - "arenaScore": A projected or actual ELO/Benchmark score (e.g., "1300 (Est)", "Top Tier").
+         - "reasoning": A brief metric on reasoning capability (e.g., "94% MMLU", "Complex").
+         - "contextWindow": The context window size (e.g., "2M", "Infinite").
+         - "speed": Inference speed or latency description (e.g., "Rapid", "Real-time").
       
       CONSTRAINTS:
-      - Base your response STRICTLY on the search results provided by the tool. 
-      - DO NOT simulate or hallucinate fake news. 
-      - If "${targetModel}" specific news is scarce, look for recent discussion or speculation about it and analyze that sentiment.
+      - News and Feedback MUST come from search results to ensure authenticity.
+      - Technical Stats MUST NOT be "Unknown" or "N/A". If data is missing, provide an educated projection labeled with "Est".
+      - Return valid JSON only.
 
       OUTPUT:
       Return a valid JSON object inside a markdown code block (\`\`\`json ... \`\`\`).
@@ -90,7 +91,7 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
       hypeLevel: parsed.hypeLevel || 0,
       themes: parsed.themes || [],
       feedback: parsed.feedback || [],
-      stats: parsed.stats || { arenaScore: "N/A", reasoning: "N/A", contextWindow: "N/A", speed: "N/A" },
+      stats: parsed.stats || { arenaScore: "1250+ (Est)", reasoning: "High", contextWindow: "2M (Est)", speed: "Fast" },
       lastUpdated: new Date().toLocaleTimeString(),
     };
 
@@ -125,10 +126,10 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
         { user: "@frontend_dev", platform: "Twitter", content: "Integrating this into my workflow has been seamless so far.", sentiment: "positive" }
       ],
       stats: {
-        arenaScore: "Pending",
-        reasoning: "High",
-        contextWindow: "Unknown",
-        speed: "Fast"
+        arenaScore: "1300+ (Proj)",
+        reasoning: "State-of-the-Art",
+        contextWindow: "2M+",
+        speed: "<50ms Latency"
       },
       lastUpdated: new Date().toLocaleTimeString(),
     };

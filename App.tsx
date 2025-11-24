@@ -10,7 +10,7 @@ import { DashboardData } from './types';
 import { RotateCw, Search } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [targetModel, setTargetModel] = useState<string>("Gemini 2.5 Flash");
+  const [targetModel, setTargetModel] = useState<string>("Gemini 3 Pro");
   const [data, setData] = useState<DashboardData>({
     hypeLevel: 0,
     themes: [],
@@ -116,6 +116,12 @@ const App: React.FC = () => {
           </div>
         </div>
       </main>
+
+      <footer className="w-full border-t border-zinc-800 bg-black/90 p-4 text-center z-40">
+        <p className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
+            Built by CPM for CPM, using Google AI Studio and deployed using Google Cloud Run. Powered by <span className="text-neon-blue">Gemini 3</span>.
+        </p>
+      </footer>
     </div>
   );
 };
