@@ -28,7 +28,9 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
       CONSTRAINTS:
       - News and Feedback MUST come from search results to ensure authenticity.
       - Technical Stats MUST NOT be "Unknown" or "N/A". If data is missing, provide an educated projection labeled with "Est".
-      - Return valid JSON only.
+      - Return valid JSON only. NO MARKDOWN FORMATTING other than the JSON block.
+      - DO NOT include unescaped newlines or control characters within JSON string values. Sanitize all strings.
+      - Do not include comments (// or /* */) in the JSON.
 
       OUTPUT:
       Return a valid JSON object inside a markdown code block (\`\`\`json ... \`\`\`).
@@ -77,13 +79,15 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
     const jsonStr = jsonMatch[1] || jsonMatch[0];
     
     // Basic cleanup
+    // 1. Remove citation markers like [1]
+    // 2. Remove "Bad control characters" (0x00-0x1F) which invalidates JSON. 
+    //    This handles unescaped newlines/tabs inside strings by turning them into spaces.
+    //    Valid escaped sequences like \n are untouched (as they are backslash + n characters).
+    // 3. Remove trailing commas.
     const cleanJsonStr = jsonStr
-      .replace(/\[\d+\]/g, '') // Remove citation numbers like [1]
-      .replace(/\/\/.*$/gm, (match) => { // Remove JS style comments but preserve URLs
-          if (match.includes('http://') || match.includes('https://')) return match;
-          return '';
-      })
-      .replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
+      .replace(/\[\d+\]/g, '') 
+      .replace(/[\u0000-\u001F]+/g, " ") 
+      .replace(/,\s*([\]}])/g, '$1');
 
     const parsed: SearchResponse = JSON.parse(cleanJsonStr);
 
