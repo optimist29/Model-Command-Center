@@ -1,0 +1,5 @@
+{
+  "name": "Model Command Center",
+  "description": "A Cyberpunk-style Launch Command Center dashboard visualizing live market sentiment and news for the Gemini 3 Pro launch.",
+  "requestFramePermissions": []
+}
