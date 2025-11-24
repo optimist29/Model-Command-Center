@@ -18,6 +18,11 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
       2. Analyze the sentiment to calculate a "Hype Level" from 0 to 100 based strictly on the search results for "${targetModel}".
       3. Identify the top 3 recurring themes or headlines for "${targetModel}".
       4. Extract 4 distinct "Developer Reactions" or quotes found in the search results regarding "${targetModel}" (e.g., from Reddit, X/Twitter, Hacker News, or blogs). Paraphrase if necessary to fit a short "tweet" style format.
+      5. Extract or estimate 4 key technical specs for "${targetModel}" based on available info or rumors:
+         - "arenaScore": A projected or actual ELO/Benchmark score (e.g., "1250", "Top Tier").
+         - "reasoning": A brief metric on reasoning capability (e.g., "92% MMLU", "High").
+         - "contextWindow": The context window size (e.g., "128k", "1M", "Unknown").
+         - "speed": Inference speed or latency description (e.g., "100 tok/s", "Real-time").
       
       CONSTRAINTS:
       - Base your response STRICTLY on the search results provided by the tool. 
@@ -40,7 +45,13 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
             "content": "string (max 140 chars)", 
             "sentiment": "positive" | "negative" | "mixed" | "neutral" 
           }
-        ]
+        ],
+        "stats": {
+          "arenaScore": "string",
+          "reasoning": "string",
+          "contextWindow": "string",
+          "speed": "string"
+        }
       }
     `;
 
@@ -79,6 +90,7 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
       hypeLevel: parsed.hypeLevel || 0,
       themes: parsed.themes || [],
       feedback: parsed.feedback || [],
+      stats: parsed.stats || { arenaScore: "N/A", reasoning: "N/A", contextWindow: "N/A", speed: "N/A" },
       lastUpdated: new Date().toLocaleTimeString(),
     };
 
@@ -112,6 +124,12 @@ export const fetchLaunchData = async (targetModel: string): Promise<DashboardDat
         { user: "ai_insider", platform: "Hacker News", content: "The new architecture seems to be a step forward for complex reasoning tasks.", sentiment: "neutral" },
         { user: "@frontend_dev", platform: "Twitter", content: "Integrating this into my workflow has been seamless so far.", sentiment: "positive" }
       ],
+      stats: {
+        arenaScore: "Pending",
+        reasoning: "High",
+        contextWindow: "Unknown",
+        speed: "Fast"
+      },
       lastUpdated: new Date().toLocaleTimeString(),
     };
   }

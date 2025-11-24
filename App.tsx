@@ -97,8 +97,8 @@ const App: React.FC = () => {
             <div className="md:col-span-4 lg:col-span-6 flex flex-col gap-6">
                {/* Top: Gauge */}
                <div className="flex-1 flex items-center justify-center min-h-[280px]">
-                 <div className="w-full max-w-md">
-                   <SentimentGauge value={data.hypeLevel} loading={loading} />
+                 <div className="w-full max-w-md h-full">
+                   <SentimentGauge value={data.hypeLevel} loading={loading} modelName={targetModel} />
                  </div>
                </div>
                
@@ -110,7 +110,7 @@ const App: React.FC = () => {
 
             {/* Right Column: Stats */}
             <div className="md:col-span-4 lg:col-span-3 h-full min-h-[300px]">
-               <StatsPanel />
+               <StatsPanel stats={data.stats} modelName={targetModel} loading={loading} />
             </div>
 
           </div>

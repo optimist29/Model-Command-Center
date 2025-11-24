@@ -13,10 +13,18 @@ export interface FeedbackItem {
   sentiment: 'positive' | 'negative' | 'mixed' | 'neutral';
 }
 
+export interface TechnicalStats {
+  arenaScore: string;
+  reasoning: string;
+  contextWindow: string;
+  speed: string;
+}
+
 export interface DashboardData {
   hypeLevel: number; // 0-100
   themes: NewsItem[];
   feedback: FeedbackItem[];
+  stats?: TechnicalStats;
   lastUpdated: string;
 }
 
@@ -24,4 +32,5 @@ export interface SearchResponse {
   hypeLevel: number;
   themes: NewsItem[];
   feedback: FeedbackItem[];
+  stats?: TechnicalStats;
 }

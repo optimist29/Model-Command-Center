@@ -1,11 +1,13 @@
+
 import React from 'react';
 
 interface SentimentGaugeProps {
   value: number;
   loading: boolean;
+  modelName: string;
 }
 
-export const SentimentGauge: React.FC<SentimentGaugeProps> = ({ value, loading }) => {
+export const SentimentGauge: React.FC<SentimentGaugeProps> = ({ value, loading, modelName }) => {
   // SVG Geometry
   const radius = 80;
   const stroke = 12;
@@ -18,10 +20,12 @@ export const SentimentGauge: React.FC<SentimentGaugeProps> = ({ value, loading }
   const strokeDashoffset = arcLength - (loading ? 0 : (value / 100) * arcLength);
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-8 bg-panel border border-zinc-800 rounded-xl neon-border backdrop-blur-sm">
+    <div className="relative flex flex-col items-center justify-center p-8 bg-panel border border-zinc-800 rounded-xl neon-border backdrop-blur-sm h-full">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-800/30 to-transparent opacity-50 pointer-events-none" />
       
-      <h2 className="text-zinc-400 text-sm font-mono uppercase mb-4 tracking-widest">Global Hype Level</h2>
+      <h2 className="text-zinc-400 text-xs font-mono uppercase mb-4 tracking-widest text-center truncate max-w-full">
+        Hype Level: <span className="text-white">{modelName}</span>
+      </h2>
 
       <div className="relative w-64 h-64 flex items-center justify-center">
         <svg
@@ -59,7 +63,7 @@ export const SentimentGauge: React.FC<SentimentGaugeProps> = ({ value, loading }
         </svg>
         
         {/* Center Text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 transform -rotate-[0deg]">
             {loading ? (
                <span className="text-4xl font-bold text-zinc-600 animate-pulse">--</span>
             ) : (
@@ -76,7 +80,7 @@ export const SentimentGauge: React.FC<SentimentGaugeProps> = ({ value, loading }
       <div className="mt-4 grid grid-cols-3 gap-4 text-center w-full max-w-[250px]">
         <div className="flex flex-col">
             <span className="text-[10px] text-zinc-500 font-mono">SENTIMENT</span>
-            <span className="text-white font-bold text-sm">{loading ? '-' : 'Bullish'}</span>
+            <span className="text-white font-bold text-sm">{loading ? '-' : (value > 60 ? 'Bullish' : value < 40 ? 'Bearish' : 'Neutral')}</span>
         </div>
         <div className="flex flex-col border-l border-r border-zinc-800">
             <span className="text-[10px] text-zinc-500 font-mono">VOLATILITY</span>
@@ -84,7 +88,7 @@ export const SentimentGauge: React.FC<SentimentGaugeProps> = ({ value, loading }
         </div>
         <div className="flex flex-col">
             <span className="text-[10px] text-zinc-500 font-mono">SOURCES</span>
-            <span className="text-white font-bold text-sm">{loading ? '-' : '124'}</span>
+            <span className="text-white font-bold text-sm">{loading ? '-' : Math.floor(Math.random() * 200 + 50)}</span>
         </div>
       </div>
     </div>
